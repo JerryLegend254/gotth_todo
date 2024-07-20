@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
+	"github.com/JerryLegend254/gotth/configs"
 	"github.com/JerryLegend254/gotth/db"
 	"github.com/JerryLegend254/gotth/handlers"
 	"github.com/JerryLegend254/gotth/services/todos"
@@ -13,11 +15,11 @@ import (
 
 func main() {
 	config := mysql.Config{
-		User:                 "root",
-		Passwd:               "",
+		User:                 configs.Envs.DBUser,
+		Passwd:               configs.Envs.DBPassword,
 		Net:                  "tcp",
-		Addr:                 "localhost:3306",
-		DBName:               "gotth_todo",
+		Addr:                 configs.Envs.DBAddress,
+		DBName:               configs.Envs.DBName,
 		AllowNativePasswords: true,
 		ParseTime:            true,
 	}
@@ -40,5 +42,5 @@ func main() {
 	router.GET("/", handler.Home)
 	router.GET("/todos", handler.Todos)
 	router.DELETE("/todos/:id", handler.DeleteTodos)
-	router.Logger.Fatal(router.Start(":8080"))
+	router.Logger.Fatal(router.Start(fmt.Sprintf(":%s", configs.Envs.Port)))
 }

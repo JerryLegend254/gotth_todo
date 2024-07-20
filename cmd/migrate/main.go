@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/JerryLegend254/gotth/configs"
 	"github.com/JerryLegend254/gotth/db"
 	"github.com/go-sql-driver/mysql"
 	"github.com/golang-migrate/migrate/v4"
@@ -13,11 +14,11 @@ import (
 
 func main() {
 	configs := mysql.Config{
-		User:                 "root",
-		Passwd:               "",
+		User:                 configs.Envs.DBUser,
+		Passwd:               configs.Envs.DBPassword,
 		Net:                  "tcp",
-		Addr:                 "localhost:3306",
-		DBName:               "gotth_todo",
+		Addr:                 configs.Envs.DBAddress,
+		DBName:               configs.Envs.DBName,
 		AllowNativePasswords: true,
 		ParseTime:            true,
 	}
