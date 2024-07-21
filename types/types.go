@@ -9,4 +9,5 @@ type Todo struct {
 type TodoStore interface {
 	GetTodos() ([]Todo, error)
 	DeleteTodos(id int) error
+	GetStoreBySearchQuery(query string) ([]Todo, error)
 }

@@ -42,5 +42,6 @@ func main() {
 	router.GET("/", handler.Home)
 	router.GET("/todos", handler.Todos)
 	router.DELETE("/todos/:id", handler.DeleteTodos)
+	router.GET("/search", handler.GetStoreBySearchQuery)
 	router.Logger.Fatal(router.Start(fmt.Sprintf(":%s", configs.Envs.Port)))
 }

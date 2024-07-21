@@ -1,0 +1,11 @@
+package components
+
+import "github.com/JerryLegend254/gotth/types"
+
+templ TodosList(todos []types.Todo) {
+	<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto w-5/6  mt-12 gap-6" id="todos-list">
+		for _, todo := range todos {
+			@TodoCard(&todo)
+		}
+	</ul>
+}

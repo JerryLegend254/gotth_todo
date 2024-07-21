@@ -40,3 +40,21 @@ func (s *Store) DeleteTodos(id int) error {
 
 	return nil
 }
+
+func (s *Store) GetStoreBySearchQuery(query string) ([]types.Todo, error) {
+	rows, err := s.repo.Query("SELECT * FROM todos WHERE title LIKE ?", "%"+query+"%")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	todos := []types.Todo{}
+	for rows.Next() {
+		var todo types.Todo
+		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed); err != nil {
+			return nil, err
+		}
+		todos = append(todos, todo)
+	}
+	return todos, nil
+}

@@ -1,28 +1,13 @@
 package views
 
 import "github.com/JerryLegend254/gotth/types"
-import "fmt"
+import "github.com/JerryLegend254/gotth/components"
 
 templ Todos(todos []types.Todo) {
 	@Page(true) {
 		<main class="h-full flex flex-col p-6">
-			<input class="border-2 border-gray-500 px-4 py-3 w-[500px] rounded-xl self-center" type="text" placeholder="Search"/>
-			<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto w-5/6  mt-12 gap-6">
-				for _, todo := range todos {
-					<li id={ fmt.Sprintf("todo-%d", uint64(todo.ID)) } class="flex flex-col py-4 gap-4 shadow px-6 shadow-black rounded-lg">
-						<p class="text-xl">{ todo.Title }</p>
-						<div class="flex gap-4 items-center">
-							<button class="bg-green-500 text-white px-4 py-2 rounded-xl">Edit</button>
-							<button
-								class="bg-red-500 text-white px-4 py-2 rounded-xl"
-								hx-delete={ fmt.Sprintf("todos/%d", uint64(todo.ID)) }
-								hx-target={ fmt.Sprintf("#todo-%d", uint64(todo.ID)) }
-								hx-swap="outerHTML"
-							>Delete</button>
-						</div>
-					</li>
-				}
-			</ul>
+			<input class="border-2 border-gray-500 px-4 py-3 w-[500px] rounded-xl self-center" type="text" placeholder="Search" hx-get="search" hx-target="#todos-list" hx-trigger="keyup changed delay:500ms" name="search-query" hx-swap="outerHTML"/>
+			@components.TodosList(todos)
 		</main>
 	}
 }

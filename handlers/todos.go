@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/JerryLegend254/gotth/components"
 	"github.com/JerryLegend254/gotth/views"
 	"github.com/labstack/echo/v4"
 )
@@ -33,4 +34,21 @@ func (h *Handler) DeleteTodos(c echo.Context) error {
 		return err
 	}
 	return c.NoContent(http.StatusOK)
+}
+
+func (h *Handler) GetStoreBySearchQuery(c echo.Context) error {
+
+	query, err := c.FormParams()
+	if err != nil {
+		return err
+	}
+	q := query.Get("search-query")
+
+	todos, err := h.store.GetStoreBySearchQuery(q)
+	if err != nil {
+		return err
+	}
+
+	return components.TodosList(todos).Render(c.Request().Context(), c.Response().Writer)
+
 }

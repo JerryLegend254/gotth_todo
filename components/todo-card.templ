@@ -1,0 +1,28 @@
+package components
+
+import "github.com/JerryLegend254/gotth/types"
+import "fmt"
+
+templ TodoCard(todo *types.Todo) {
+	<li id={ fmt.Sprintf("todo-%d", uint64(todo.ID)) } class="flex flex-col py-4 gap-4 shadow px-6 shadow-black rounded-lg">
+		<p class="text-xl">{ todo.Title }</p>
+		<div class="flex gap-4 items-center">
+			<p class="text-gray-500">Completed</p>
+			<input
+				type="checkbox"
+				if todo.Completed {
+					checked
+				}
+			/>
+		</div>
+		<div class="flex gap-4 items-center">
+			<button class="bg-green-500 text-white px-4 py-2 rounded-xl">Edit</button>
+			<button
+				class="bg-red-500 text-white px-4 py-2 rounded-xl"
+				hx-delete={ fmt.Sprintf("todos/%d", uint64(todo.ID)) }
+				hx-target={ fmt.Sprintf("#todo-%d", uint64(todo.ID)) }
+				hx-swap="outerHTML"
+			>Delete</button>
+		</div>
+	</li>
+}
