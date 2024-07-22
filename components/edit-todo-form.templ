@@ -1,0 +1,21 @@
+package components
+
+import "github.com/JerryLegend254/gotth/types"
+import "fmt"
+
+templ EditTodoForm(todo *types.Todo) {
+	<form hx-target="this" hx-swap="outerHTML" hx-put={ fmt.Sprintf("todos/%d/edit", todo.ID) } class="flex flex-col gap-4 shadow shadow-black px-6 py-4 rounded-lg">
+		<input type="text" value={ todo.Title } name="title" class="border-2 border-gray-500 px-4 py-2 rounded-xl"/>
+		<div class="flex flex-row gap-4">
+			<p class="">Completed</p>
+			<input
+				type="checkbox"
+				if todo.Completed {
+					checked
+				}
+				name="completed"
+			/>
+		</div>
+		<button class="bg-green-500 text-white px-4 py-2 rounded-xl" type="submit">Save</button>
+	</form>
+}
