@@ -16,7 +16,7 @@ templ TodoCard(todo *types.Todo) {
 			/>
 		</div>
 		<div class="flex gap-4 items-center">
-			<button class="bg-green-500 text-white px-4 py-2 rounded-xl">Edit</button>
+			<button class="bg-green-500 text-white px-4 py-2 rounded-xl" hx-get={ fmt.Sprintf("todos/%d/edit", uint64(todo.ID)) } hx-swap="outerHTML" hx-target={ fmt.Sprintf("#todo-%d", uint64(todo.ID)) }>Edit</button>
 			<button
 				class="bg-red-500 text-white px-4 py-2 rounded-xl"
 				hx-delete={ fmt.Sprintf("todos/%d", uint64(todo.ID)) }

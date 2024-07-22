@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/JerryLegend254/gotth/components"
+	"github.com/JerryLegend254/gotth/types"
 	"github.com/JerryLegend254/gotth/views"
 	"github.com/labstack/echo/v4"
 )
@@ -50,5 +52,55 @@ func (h *Handler) GetStoreBySearchQuery(c echo.Context) error {
 	}
 
 	return components.TodosList(todos).Render(c.Request().Context(), c.Response().Writer)
+
+}
+
+func (h *Handler) EditTodoGet(c echo.Context) error {
+
+	id := c.Param("id")
+	if id == "" {
+		return c.String(http.StatusBadRequest, "id is required")
+	}
+	convertedId, err := strconv.Atoi(id)
+
+	if err != nil {
+		return c.String(http.StatusBadRequest, "id must be a number")
+	}
+
+	todo, err := h.store.GetTodoByID(convertedId)
+	if err != nil {
+		return err
+	}
+
+	return components.EditTodoForm(&todo).Render(c.Request().Context(), c.Response().Writer)
+}
+
+func (h *Handler) EditTodoPut(c echo.Context) error {
+	v, err := c.FormParams()
+	if err != nil {
+		return err
+	}
+	id := c.Param("id")
+	if id == "" {
+		return c.String(http.StatusBadRequest, "id is required")
+	}
+	convertedId, err := strconv.Atoi(id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "id must be a number")
+	}
+	title := v.Get("title")
+	completed := v.Get("completed")
+
+	todo := types.Todo{
+		ID:        convertedId,
+		Title:     title,
+		Completed: completed == "on",
+	}
+	_, err = h.store.EditTodo(todo)
+	if err != nil {
+		return err
+	}
+	//return c.Redirect(http.StatusFound, "/todos")
+	return components.TodoCard(&todo).Render(c.Request().Context(), c.Response().Writer)
 
 }

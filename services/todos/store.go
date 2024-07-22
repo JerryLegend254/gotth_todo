@@ -58,3 +58,24 @@ func (s *Store) GetStoreBySearchQuery(query string) ([]types.Todo, error) {
 	}
 	return todos, nil
 }
+
+func (s *Store) GetTodoByID(id int) (types.Todo, error) {
+	var todo types.Todo
+	err := s.repo.QueryRow("SELECT * FROM todos WHERE id = ?", id).Scan(&todo.ID, &todo.Title, &todo.Completed)
+	if err != nil {
+		return types.Todo{}, err
+	}
+	return todo, nil
+}
+
+func (s *Store) EditTodo(todo types.Todo) (types.Todo, error) {
+	_, err := s.repo.Exec("UPDATE todos SET title = ?, completed = ? WHERE id = ?", todo.Title, todo.Completed, todo.ID)
+	if err != nil {
+		return types.Todo{}, err
+	}
+	editTodo, err := s.GetTodoByID(todo.ID)
+	if err != nil {
+		return types.Todo{}, err
+	}
+	return editTodo, nil
+}
