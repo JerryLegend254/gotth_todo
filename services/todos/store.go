@@ -79,3 +79,11 @@ func (s *Store) EditTodo(todo types.Todo) (types.Todo, error) {
 	}
 	return editTodo, nil
 }
+
+func (s *Store) CreateNewTodo(todo types.Todo) (types.Todo, error) {
+	_, err := s.repo.Exec("INSERT INTO todos (title, completed) VALUES (?, ?)", todo.Title, todo.Completed)
+	if err != nil {
+		return types.Todo{}, err
+	}
+	return todo, nil
+}

@@ -44,6 +44,7 @@ func main() {
 	router.DELETE("/todos/:id", handler.DeleteTodos)
 	router.GET("/todos/:id/edit", handler.EditTodoGet)
 	router.PUT("/todos/:id/edit", handler.EditTodoPut)
+	router.POST("/todos", handler.AddTodo)
 	router.GET("/search", handler.GetStoreBySearchQuery)
 	router.Logger.Fatal(router.Start(fmt.Sprintf(":%s", configs.Envs.Port)))
 }

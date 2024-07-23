@@ -12,4 +12,5 @@ type TodoStore interface {
 	GetStoreBySearchQuery(query string) ([]Todo, error)
 	GetTodoByID(id int) (Todo, error)
 	EditTodo(todo Todo) (Todo, error)
+	CreateNewTodo(todo Todo) (Todo, error)
 }

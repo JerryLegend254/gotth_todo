@@ -2,11 +2,29 @@ package views
 
 import "github.com/JerryLegend254/gotth/types"
 import "github.com/JerryLegend254/gotth/components"
+import "strconv"
 
-templ Todos(todos []types.Todo) {
+templ Todos(todos []types.Todo, isAddingTodo bool) {
 	@Page(true) {
-		<main class="h-full flex flex-col p-6">
+		<main class="h-full flex flex-col p-6 gap-4">
 			<input class="border-2 border-gray-500 px-4 py-3 w-[500px] rounded-xl self-center" type="text" placeholder="Search" hx-get="search" hx-target="#todos-list" hx-trigger="keyup changed delay:500ms" name="search-query" hx-swap="outerHTML"/>
+			<button class="bg-blue-900 px-4 py-2 text-white self-center rounded-lg" hx-get="/todos" hx-swap="outerHTML" hx-target="body" name="isAddingTodo" value={ templ.EscapeString(strconv.FormatBool(!isAddingTodo)) }>
+				if isAddingTodo {
+					Cancel
+				} else {
+					Add Todo
+				}
+			</button>
+			if isAddingTodo {
+				<form class="flex flex-col gap-4 w-[500px] self-center" hx-post="/todos" hx-swap="beforeend" hx-target="#todos-list">
+					<input class="border-2 border-gray-500 px-4 py-3 w-full rounded-xl self-center" type="text" placeholder="Title" name="title"/>
+					<div class="flex gap-4">
+						<p>Completed</p>
+						<input class="border-2 border-gray-500 px-4 py-3 rounded-xl self-center" type="checkbox" name="completed"/>
+					</div>
+					<button class="bg-blue-900 px-4 py-2 text-white self-center rounded-lg" type="submit">Add Todo</button>
+				</form>
+			}
 			@components.TodosList(todos)
 		</main>
 	}

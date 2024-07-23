@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
@@ -12,12 +11,13 @@ import (
 )
 
 func (h *Handler) Todos(c echo.Context) error {
+	isAddingTodo := c.QueryParam("isAddingTodo") == "true"
 	todos, err := h.store.GetTodos()
 	if err != nil {
 		return err
 	}
 
-	return views.Todos(todos).Render(c.Request().Context(), c.Response().Writer)
+	return views.Todos(todos, isAddingTodo).Render(c.Request().Context(), c.Response().Writer)
 }
 
 func (h *Handler) DeleteTodos(c echo.Context) error {
@@ -102,5 +102,27 @@ func (h *Handler) EditTodoPut(c echo.Context) error {
 	}
 	//return c.Redirect(http.StatusFound, "/todos")
 	return components.TodoCard(&todo).Render(c.Request().Context(), c.Response().Writer)
+
+}
+
+func (h *Handler) AddTodo(c echo.Context) error {
+	v, err := c.FormParams()
+	if err != nil {
+		return err
+	}
+	title := v.Get("title")
+	completed := v.Get("completed") == "on"
+
+	todo := types.Todo{
+		Title:     title,
+		Completed: completed,
+	}
+
+	createdTodo, err := h.store.CreateNewTodo(todo)
+	if err != nil {
+		return err
+	}
+
+	return components.TodoCard(&createdTodo).Render(c.Request().Context(), c.Response().Writer)
 
 }
