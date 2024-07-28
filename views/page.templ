@@ -16,8 +16,8 @@ templ Page(nav bool) {
 					<nav class="flex items-center bg-blue-900 px-6 py-4 text-white justify-between">
 						<h1 class="font-bold text-2xl">Todo App</h1>
 						<ul class="flex gap-4">
-							<li><a href="/">Home</a></li>
-							<li><a href="/todos">Todos</a></li>
+							<li><a href="/" hx-boost="true">Home</a></li>
+							<li><a href="/todos" hx-boost="true">Todos</a></li>
 						</ul>
 					</nav>
 				</header>
