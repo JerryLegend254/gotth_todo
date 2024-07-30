@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/JerryLegend254/gotth/configs"
@@ -10,7 +9,6 @@ import (
 	"github.com/JerryLegend254/gotth/services/todos"
 	"github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -33,18 +31,8 @@ func main() {
 	todosStore := todos.NewStore(d)
 
 	router := echo.New()
-	router.Static("/public", "public")
 	handler := handlers.New(todosStore)
-	router.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "[ECHO] ${time_rfc3339_nano} |${status}|         ${latency_human} |             ${path} | ${method}\n",
-	}))
 
-	router.GET("/", handler.Home)
-	router.GET("/todos", handler.Todos)
-	router.DELETE("/todos/:id", handler.DeleteTodos)
-	router.GET("/todos/:id/edit", handler.EditTodoGet)
-	router.PUT("/todos/:id/edit", handler.EditTodoPut)
-	router.POST("/todos", handler.AddTodo)
-	router.GET("/search", handler.GetStoreBySearchQuery)
-	router.Logger.Fatal(router.Start(fmt.Sprintf(":%s", configs.Envs.Port)))
+	handlers.RegisterRoutes(router, handler)
+
 }
