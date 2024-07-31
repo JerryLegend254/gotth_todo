@@ -1,23 +1,28 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/JerryLegend254/gotth/configs"
-	"github.com/JerryLegend254/gotth/types"
+	"github.com/JerryLegend254/gotth/services/todos"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 type Handler struct {
-	store types.TodoStore
 }
 
-func New(s types.TodoStore) *Handler {
-	return &Handler{store: s}
+func New() *Handler {
+	return &Handler{}
 }
 
-func RegisterRoutes(router *echo.Echo, handler *Handler) {
+var handler = New()
+
+func RegisterRoutes(router *echo.Echo, db *sql.DB) {
+
+	todoStore := todos.NewStore(db)
+	todosHandler := todos.NewHandler(todoStore)
 
 	router.Static("/public", "public")
 
@@ -27,12 +32,12 @@ func RegisterRoutes(router *echo.Echo, handler *Handler) {
 
 	router.GET("/", handler.Home)
 
-	router.GET("/todos", handler.Todos)
-	router.DELETE("/todos/:id", handler.DeleteTodos)
-	router.GET("/todos/:id/edit", handler.EditTodoGet)
-	router.PUT("/todos/:id/edit", handler.EditTodoPut)
-	router.POST("/todos", handler.AddTodo)
+	router.GET("/todos", todosHandler.Todos)
+	router.DELETE("/todos/:id", todosHandler.DeleteTodos)
+	router.GET("/todos/:id/edit", todosHandler.EditTodoGet)
+	router.PUT("/todos/:id/edit", todosHandler.EditTodoPut)
+	router.POST("/todos", todosHandler.AddTodo)
 
-	router.GET("/search", handler.GetStoreBySearchQuery)
+	router.GET("/search", todosHandler.GetStoreBySearchQuery)
 	router.Logger.Fatal(router.Start(fmt.Sprintf(":%s", configs.Envs.Port)))
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/JerryLegend254/gotth/configs"
 	"github.com/JerryLegend254/gotth/db"
 	"github.com/JerryLegend254/gotth/handlers"
-	"github.com/JerryLegend254/gotth/services/todos"
 	"github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 )
@@ -28,11 +27,8 @@ func main() {
 
 	db.InitDB(d)
 
-	todosStore := todos.NewStore(d)
-
 	router := echo.New()
-	handler := handlers.New(todosStore)
 
-	handlers.RegisterRoutes(router, handler)
+	handlers.RegisterRoutes(router, d)
 
 }
