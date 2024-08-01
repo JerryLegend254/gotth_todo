@@ -1,9 +1,9 @@
 package types
 
 type Todo struct {
-	ID        int
-	Title     string
-	Completed bool
+	ID        int    `form:"id"`
+	Title     string `form:"title" validate:"required"`
+	Completed bool   `form:"completed"`
 }
 
 type TodoStore interface {
