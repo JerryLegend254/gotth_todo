@@ -5,9 +5,9 @@ import "fmt"
 
 templ TodoCard(todo *types.Todo) {
 	<li id={ fmt.Sprintf("todo-%d", uint64(todo.ID)) } class="flex flex-col py-4 gap-4 shadow px-6 shadow-black rounded-lg">
-		<p class="text-xl">{ todo.Title }</p>
+		<p class="text-xl capitalize">{ todo.Title }</p>
 		<div class="flex gap-4 items-center">
-			<p class="text-gray-500">Completed</p>
+			<p class="text-gray-900">Completed</p>
 			<input
 				type="checkbox"
 				if todo.Completed {

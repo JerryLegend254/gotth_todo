@@ -1,6 +1,7 @@
 package todos
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -114,6 +115,19 @@ func (h *Handler) EditTodoPut(c echo.Context) error {
 }
 
 func (h *Handler) AddTodo(c echo.Context) error {
+	body := new(types.Todo)
+
+	if err := c.Bind(&body); err != nil {
+		log.Println(err)
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(&body); err != nil {
+
+		//return echo.NewHTTPError(http.StatusBadRequest, errors.New("ensure all fields are filled"))
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
 	v, err := c.FormParams()
 	if err != nil {
 		return err
@@ -128,8 +142,11 @@ func (h *Handler) AddTodo(c echo.Context) error {
 
 	createdTodo, err := h.store.CreateNewTodo(todo)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
+
+	c.Response().Header().Set("Content-Type", "text/html")
 
 	return components.TodoCard(&createdTodo).Render(c.Request().Context(), c.Response().Writer)
 

@@ -6,6 +6,7 @@ import (
 	"github.com/JerryLegend254/gotth/configs"
 	"github.com/JerryLegend254/gotth/db"
 	"github.com/JerryLegend254/gotth/handlers"
+	"github.com/JerryLegend254/gotth/utils"
 	"github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 )
@@ -28,6 +29,7 @@ func main() {
 	db.InitDB(d)
 
 	router := echo.New()
+	router.Validator = utils.NewValidator()
 
 	handlers.RegisterRoutes(router, d)
 
