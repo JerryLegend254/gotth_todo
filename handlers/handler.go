@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 
-	"github.com/JerryLegend254/gotth/configs"
 	"github.com/JerryLegend254/gotth/services/todos"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -19,7 +17,7 @@ func New() *Handler {
 
 var handler = New()
 
-func RegisterRoutes(router *echo.Echo, db *sql.DB) {
+func RegisterRoutes(router *echo.Echo, db *sql.DB) *echo.Echo {
 
 	todoStore := todos.NewStore(db)
 	todosHandler := todos.NewHandler(todoStore)
@@ -39,5 +37,6 @@ func RegisterRoutes(router *echo.Echo, db *sql.DB) {
 	router.POST("/todos", todosHandler.AddTodo)
 
 	router.GET("/search", todosHandler.GetStoreBySearchQuery)
-	router.Logger.Fatal(router.Start(fmt.Sprintf(":%s", configs.Envs.Port)))
+
+	return router
 }
